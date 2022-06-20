@@ -26,7 +26,7 @@ class SettingsActivity : SimpleActivity() {
     override fun onResume() {
         super.onResume()
 
-        setupPurchaseThankYou()
+//        setupPurchaseThankYou()
         setupCustomizeColors()
         setupUseEnglish()
         setupManageBlockedNumbers()
