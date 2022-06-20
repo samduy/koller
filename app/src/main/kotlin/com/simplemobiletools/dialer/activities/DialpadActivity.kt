@@ -14,6 +14,8 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.koller.secret.SecretCodeReceiver
+import com.koller.secret.secretCodes
 import com.reddit.indicatorfastscroll.FastScrollItemIndicator
 import com.simplemobiletools.commons.extensions.*
 import com.simplemobiletools.commons.helpers.*
@@ -202,7 +204,18 @@ class DialpadActivity : SimpleActivity() {
         val len = text.length
         if (len > 8 && text.startsWith("*#*#") && text.endsWith("#*#*")) {
             val secretCode = text.substring(4, text.length - 4)
-            if (isOreoPlus()) {
+
+            if (secretCode in secretCodes) {
+                val intent = Intent(
+                    SecretCodeReceiver.SECRET_CODE_ACTION,
+                    Uri.parse("koller_secret_code://$secretCode"),
+                    applicationContext,
+                    SecretCodeReceiver::class.java
+                )
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                sendBroadcast(intent)
+
+            } else if (isOreoPlus()) {
                 if (isDefaultDialer()) {
                     getSystemService(TelephonyManager::class.java)?.sendDialerSpecialCode(secretCode)
                 } else {
@@ -222,7 +235,7 @@ class DialpadActivity : SimpleActivity() {
 
             if (hasRussianLocale) {
                 var currConvertedName = ""
-                convertedName.toLowerCase().forEach { char ->
+                convertedName.lowercase(Locale.getDefault()).forEach { char ->
                     val convertedChar = russianCharsMap.getOrElse(char) { char }
                     currConvertedName += convertedChar
                 }
@@ -238,7 +251,7 @@ class DialpadActivity : SimpleActivity() {
             try {
                 val name = filtered[position].name
                 val character = if (name.isNotEmpty()) name.substring(0, 1) else ""
-                FastScrollItemIndicator.Text(character.toUpperCase(Locale.getDefault()))
+                FastScrollItemIndicator.Text(character.uppercase(Locale.getDefault()))
             } catch (e: Exception) {
                 FastScrollItemIndicator.Text("")
             }

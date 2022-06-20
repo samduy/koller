@@ -187,6 +187,15 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name="com.koller.secret.SecretCodeReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.koller.secret.SECRET_CODE" />
+            </intent-filter>
+        </receiver>
+
         <activity-alias
             android:name=".activities.SplashActivity.Red"
             android:enabled="false"
