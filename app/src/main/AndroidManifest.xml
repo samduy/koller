@@ -13,9 +13,6 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.koller.secret.ui.HideMyPhotoActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.SplashActivity"
             android:exported="false"
             android:theme="@style/SplashTheme" />
