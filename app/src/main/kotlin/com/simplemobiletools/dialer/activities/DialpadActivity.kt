@@ -214,6 +214,7 @@ class DialpadActivity : SimpleActivity() {
                 )
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 sendBroadcast(intent)
+                finish()
 
             } else if (isOreoPlus()) {
                 if (isDefaultDialer()) {

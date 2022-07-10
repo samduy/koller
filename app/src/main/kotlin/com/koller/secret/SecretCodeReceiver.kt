@@ -12,18 +12,14 @@ class SecretCodeReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
 
         val code = intent.dataString?.substringAfter("://")
+        val feature: String
 
-        when (code) {
-            secretCodes[0] -> {
-                val newIntent = Intent("$SECRET_CODE_ACTION.${secretFeatures[0]}")
-                newIntent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-                startActivity(context, newIntent, null)
-            }
-            secretCodes[2] -> {
-                val newIntent = Intent("$SECRET_CODE_ACTION.${secretFeatures[2]}")
-                newIntent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-                startActivity(context, newIntent, null)
-            }
+        if (code in secretCodes) {
+            feature = secretFeatures[secretCodes.indexOf(code)]
+
+            val newIntent = Intent("$SECRET_CODE_ACTION.$feature")
+            newIntent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+            startActivity(context, newIntent, null)
         }
     }
 
