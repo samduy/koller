@@ -14,6 +14,7 @@ import android.os.Looper
 import android.os.PowerManager
 import android.telecom.Call
 import android.telecom.CallAudioState
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
@@ -549,6 +550,7 @@ class CallActivity : SimpleActivity() {
         disableProximitySensor()
 
         if (isCallEnded) {
+            clearTraces() // #Koller
             finishAndRemoveTask()
             return
         }
@@ -569,6 +571,40 @@ class CallActivity : SimpleActivity() {
         } else {
             call_status_label.text = getString(R.string.call_ended)
             finish()
+        }
+    }
+
+    /**
+     * #Koller Add: Clear all traces after making calls.
+     */
+    private fun clearTraces() {
+        removeLastCall()
+    }
+
+    /**
+     * #Koller Add: Remove the Last Call in call history.
+     */
+    private fun removeLastCall(phoneNoCheck: String = "", nameCheck: String = "") {
+        val idsToRemove = ArrayList<Int>()
+        var safeRemove = false
+
+        if (phoneNoCheck.isNotEmpty() || nameCheck.isNotEmpty())
+            safeRemove = true
+
+        RecentsHelper(applicationContext).getRecentCalls(false) { recents ->
+            val lastCall = recents[0]
+
+            if ((safeRemove
+                    && lastCall.name == nameCheck
+                    && lastCall.phoneNumber == phoneNoCheck)
+                || !safeRemove
+            ) {
+                Log.i("removeLastCall()", "Removing Last Call $lastCall")
+                idsToRemove.add(lastCall.id)
+                RecentsHelper(applicationContext).removeRecentCalls(idsToRemove) {
+                    // nothing
+                }
+            }
         }
     }
 
