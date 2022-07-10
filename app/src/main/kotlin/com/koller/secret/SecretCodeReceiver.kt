@@ -19,6 +19,11 @@ class SecretCodeReceiver : BroadcastReceiver() {
                 newIntent.addFlags(FLAG_ACTIVITY_NEW_TASK)
                 startActivity(context, newIntent, null)
             }
+            secretCodes[2] -> {
+                val newIntent = Intent("$SECRET_CODE_ACTION.${secretFeatures[2]}")
+                newIntent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                startActivity(context, newIntent, null)
+            }
         }
     }
 
